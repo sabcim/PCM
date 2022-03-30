@@ -36,3 +36,13 @@ yarn-error.log*
 
 # typescript
 *.tsbuildinfo
+
+# Firebase secret keys
+/scripts/firebase/config.ts
+
+# Next js build and export folders
+/out/
+/.next/
+
+# Firebase debug log
+firebase-debug.log
