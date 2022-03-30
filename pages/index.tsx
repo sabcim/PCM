@@ -2,6 +2,7 @@ import type { NextPage } from 'next'
 import Posts from '../components/Posts'
 import { db } from '../scripts/firebase/config'
 import { getDocs, collection } from 'firebase/firestore'
+import SearchBar from '../components/SearchBar'
 
 async function Peenis() {
 
@@ -12,6 +13,7 @@ const Home: NextPage = () => {
 
   return (
     <>
+      <SearchBar />
       <Posts
       length={8}
       heading="Posts"
