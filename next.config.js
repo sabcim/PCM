@@ -2,7 +2,10 @@
 const nextConfig = {
   reactStrictMode: true,
   images: {
-    domains: ['firebasestorage.googleapis.com'],
+    domains: ['firebasestorage.googleapis.com', 'avatars.dicebear.com'],
+  },
+  experimental: {
+    urlImports: ['https://cdn.skypack.dev'],
   },
 }
 

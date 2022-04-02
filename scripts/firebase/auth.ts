@@ -1,27 +1,44 @@
-import { setDoc, doc, getDocs, collection, addDoc } from "firebase/firestore"
+import { setDoc, doc, addDoc, collection } from "firebase/firestore"
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile } from "firebase/auth"
 import { auth, db } from "./config"
 
-export function signIn(props: {email: string, password:string}) {
+export async function signIn(props: {email: string, password:string}) {
 
-    signInWithEmailAndPassword(auth, props.email, props.password).then((res) => {
+    try {
 
-        console.log("Sucessfully signed in")
-    }).catch((e) => {
+        await signInWithEmailAndPassword(auth, props.email, props.password)
 
-        alert(e)
-    })
+        setDoc(doc(db, "users", auth.currentUser!.uid), {
+
+            email: auth.currentUser!.email,
+            displayName: auth.currentUser!.displayName,
+            pfp: auth.currentUser!.photoURL
+        }, {merge: true})
+    } catch(e) {console.log}
+
 }
 
-export function signUp(props: {email: string, password:string, displayName: string}) {
+export async function signUp(props: {email: string, password:string, displayName: string}) {
 
-    createUserWithEmailAndPassword(auth, props.email, props.password).then((res) => {
+    try {
 
-        updateProfile(auth.currentUser!, {displayName: props.displayName}).then(() => {
+        await createUserWithEmailAndPassword(auth, props.email, props.password)
 
-            console.log("Sucessfully signed up", auth.currentUser)
-        }).catch(alert)
-    }).catch(alert)
+
+
+        await updateProfile(auth.currentUser!, {
+            displayName: props.displayName,
+            photoURL: `https://avatars.dicebear.com/api/identicon/${auth!.currentUser!.email}.svg?background=000`
+        })
+
+        await setDoc(doc(db, "users", auth.currentUser!.uid), {
+
+            email: auth.currentUser!.email,
+            displayName: auth.currentUser!.displayName,
+            pfp: auth.currentUser!.photoURL,
+            cart: []
+        }, {merge: true})
+    } catch(e) {console.log}
 }
 
 auth.onAuthStateChanged((user) => {
@@ -31,7 +48,13 @@ auth.onAuthStateChanged((user) => {
         setDoc(doc(db, "users", user.uid), {
 
             email: user.email,
-            displayName: user.displayName
+            displayName: user.displayName,
+            pfp: user.photoURL,
         }, {merge: true})
+
+        updateProfile(auth.currentUser!,
+        {
+            photoURL: `https://avatars.dicebear.com/api/identicon/${user.email}.svg?background=000`
+        })
     }
 })

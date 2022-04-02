@@ -1,4 +1,4 @@
-import { getDocs, getDoc, doc, collection, where, query, QueryDocumentSnapshot, DocumentData, DocumentSnapshot } from "firebase/firestore";
+import { getDocs, getDoc, doc, collection, where, orderBy, query, QueryDocumentSnapshot, DocumentData, DocumentSnapshot } from "firebase/firestore";
 import { NextPage } from "next";
 import { useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
@@ -10,13 +10,13 @@ import PostDoc from "../../scripts/interfaces/PostDoc.interface";
 
 interface Order {
 
-    posts: PostDoc[]
+    posts: DocumentSnapshot[]
     data: OrderDoc
 }
 
 const Home: NextPage = () => {
 
-    let [orders, setOrders] = useState<null | undefined | any>(null)
+    let [orders, setOrders] = useState<null | undefined | any>([])
     const [user] = useAuthState(auth)
 
     useEffect(() => {
@@ -29,9 +29,9 @@ const Home: NextPage = () => {
             const ordersRef = collection(db, "orders")
 
             // Order by orders belonging to current user
-            const orderQuery = where("user", "==", user!.uid)
+            const orderQuery = where("uid", "==", user!.uid)
 
-            const queriedOrders = await getDocs(query(ordersRef, orderQuery))
+            const queriedOrders = await getDocs(query(ordersRef, orderQuery, orderBy("createdAt", "asc")))
 
             const orderPosts = await Promise.all(queriedOrders.docs.map(async (order: QueryDocumentSnapshot<DocumentData>) => {
 
@@ -39,7 +39,7 @@ const Home: NextPage = () => {
                     {
                         posts: await Promise.all(order.data().posts.map(async (post: any) => {
 
-                            return (await getDoc(doc(db, "posts", post)))
+                            return (await getDoc(doc(db, "posts", post.replace(`"`, ''))))
                         })),
                         data: order.data()
                     })
@@ -54,7 +54,7 @@ const Home: NextPage = () => {
 
     return (
         <>
-            {orders ?
+            {orders.length > 0 ?
             <>
                 {orders.map((order: Order, index: number) => {
 
@@ -85,7 +85,11 @@ const Home: NextPage = () => {
                 )
                 })}
             </>
-            : null}
+            :
+            <div className="flex justify-center text-white text-3xl">
+                No Orders
+            </div>
+            }
         </>
     )
 }

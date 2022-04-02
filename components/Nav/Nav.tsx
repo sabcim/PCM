@@ -6,6 +6,8 @@ import { openModal } from "../../scripts/modals"
 import Link from "next/link"
 import { MenuIcon } from "@heroicons/react/solid"
 import SideBar from "./SideBar"
+import { doThing } from "../../scripts/firebase/firestore"
+import Image from "next/image"
 
 function openSidebar() {
 
@@ -58,10 +60,20 @@ const Nav:NextComponentType = () => {
                         {user ?
                         <>
                             <li>
-                                <div className="w-full grid grid-flow-col gap-x-1 cursor-pointer">
+                                <div className="w-full grid grid-flow-col gap-x-1 cursor-pointer" id="account-dropdown">
                                     <Dropdown
                                     triggerName='Account'
                                     options={[
+                                        {
+                                            name: "View Profile",
+                                            href: `/u/${user.uid}`
+                                        },
+                                        {
+                                            name: 'Settings',
+                                            onClick: () => {
+                                                openModal('account-settings')
+                                            }
+                                        },
                                         {
                                             name: 'Orders',
                                             href: '/orders'
@@ -69,12 +81,6 @@ const Nav:NextComponentType = () => {
                                         {
                                             name: 'Cart',
                                             href: '/cart'
-                                        },
-                                        {
-                                            name: 'Settings',
-                                            onClick: () => {
-                                                openModal('account-settings')
-                                            }
                                         },
                                         {
                                             name: 'Sign Out',
@@ -88,6 +94,7 @@ const Nav:NextComponentType = () => {
                                 <p
                                 className="hover:text-sky-500 dark:hover:text-sky-400 text-white"
                                 onClick={() => openModal("create-post")}
+                                id="create-post-trigger"
                                 >
                                     Create Post
                                 </p>
@@ -107,6 +114,7 @@ const Nav:NextComponentType = () => {
                                 <p
                                 className="hover:text-sky-500 dark:hover:text-sky-400 text-white"
                                 onClick={() => openModal("sign-in")}
+                                id="sign-in-trigger"
                                 >
                                     Sign In
                                 </p>

@@ -1,47 +1,4 @@
 {
-  "indexes": [
-    {
-      "collectionGroup": "Posts",
-      "queryScope": "COLLECTION",
-      "fields": [
-        {
-          "fieldPath": "bought",
-          "order": "ASCENDING"
-        },
-        {
-          "fieldPath": "createdAt",
-          "order": "DESCENDING"
-        }
-      ]
-    },
-    {
-      "collectionGroup": "Posts",
-      "queryScope": "COLLECTION",
-      "fields": [
-        {
-          "fieldPath": "bought",
-          "order": "ASCENDING"
-        },
-        {
-          "fieldPath": "views",
-          "order": "ASCENDING"
-        }
-      ]
-    },
-    {
-      "collectionGroup": "Posts",
-      "queryScope": "COLLECTION",
-      "fields": [
-        {
-          "fieldPath": "createdAt",
-          "order": "ASCENDING"
-        },
-        {
-          "fieldPath": "views",
-          "order": "ASCENDING"
-        }
-      ]
-    }
-  ],
+  "indexes": [],
   "fieldOverrides": []
 }

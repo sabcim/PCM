@@ -2,6 +2,7 @@ import { NextComponentType } from "next";
 import { Menu, Transition } from '@headlessui/react'
 import { ChevronDownIcon } from '@heroicons/react/solid'
 import { Fragment } from 'react'
+import Link from "next/link";
 
 function classNames(...classes: any) {
     return classes.filter(Boolean).join(' ')
@@ -41,19 +42,23 @@ const Dropdown = (props: propsType) => {
             >
                 <Menu.Items className="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
                 <div className="py-1">
-                    {props.options.map((option:any) => {
-                        return <Menu.Item>
+                    {props.options.map((option, index) => {
+                        return <Menu.Item key={index}>
                         {({ active }) => (
-                            <a
-                            href={option.href ? option.href : null}
-                            onClick={option.onClick ? option.onClick : () => {}}
-                            className={classNames(
-                                active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
-                                'block px-4 py-2 text-sm'
-                            )}
+                            <Link
+                            href={option.href ? option.href : ''}
                             >
-                            {option.name}
-                            </a>
+                                <a
+                                onClick={option.onClick ? option.onClick : () => {}}
+                                className={classNames(
+                                    active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
+                                    'block px-4 py-2 text-sm'
+                                )}
+                                id={option.name.toLowerCase().split(" ").join("-")}
+                                >
+                                    {option.name}
+                                </a>
+                            </Link>
                         )}
                         </Menu.Item>
 

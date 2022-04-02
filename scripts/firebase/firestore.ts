@@ -21,16 +21,6 @@ export async function createPost(props: {title:string, price: number, condition:
         createdAt: new Date().getTime(),
         imageURLs: downloadURLs
     })
-
-
-    const userDoc = await getDoc(doc(db, "users", auth.currentUser!.uid))
-
-    const posts = [...userDoc.data()!.posts, postDoc.id]
-
-    setDoc(doc(db, "users", auth.currentUser!.uid), {
-
-        posts: posts
-    }, {merge: true})
 }
 
 export async function addPostToCart(id:string) {
@@ -56,4 +46,8 @@ export async function removePostFromCart(id: string) {
 
         cart: cart
     }, {merge: true})
+}
+
+export async function doThing() {
+
 }

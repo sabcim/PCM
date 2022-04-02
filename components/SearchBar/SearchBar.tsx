@@ -25,11 +25,12 @@ const SearchBar: NextComponentType = () => {
 
     return (
         <>
-            <Link href={`/s/${searchBar.current ? searchBar.current.value : null}`}>
+            <Link href={`/s/${searchBar.current ? searchBar.current.value : null}`} passHref>
                 <div className="hidden w-full h-full" ref={linkButton}></div>
             </Link>
-            <div className="pt-2 relative mx-auto text-gray-600">
+            <div className="flex justify-center pt-2 mx-auto text-gray-600">
                 <input
+                id="searchBar"
                 className="border-2 border-gray-300 bg-white h-10 px-5 pr-16 rounded-lg text-sm focus:outline-none"
                 type="search"
                 name="search"
@@ -41,7 +42,11 @@ const SearchBar: NextComponentType = () => {
                 />
                 <button
                 type="submit"
-                className="absolute right-0 top-0 mt-5 mr-4"
+                className="ml-5"
+                onClick={() => {
+                    linkButton.current.click()
+                }
+                }
                 >
                     <svg className="text-gray-600 h-4 w-4 fill-current" xmlns="http://www.w3.org/2000/svg"
                         xmlnsXlink="http://www.w3.org/1999/xlink" version="1.1" id="Capa_1" x="0px" y="0px"

@@ -21,35 +21,34 @@ interface Props {
 
 const Posts: any = (props: Props) => {
 
-    const [posts, setPosts] = useState<any>(null)
+    let [posts, setPosts] = useState<any>(null)
     const [user] = useAuthState(auth)
 
     useEffect(() => {
 
-        const postsData:any = []
+        const runAsync = async () => {
 
-        props.getFunction().then((posts) => {
+            let postsCollection = await props.getFunction()
 
-            let x = 0
+            if (!postsCollection) return
 
-            if (!posts) return
+            const postsData =
+            postsCollection
+                .map((post, index) => {
 
-            for (let post of posts) {
+                    if (index >= props.length) {
 
-                if (!post.data()) continue
+                        return null
+                    }
 
-                postsData.push(Object.assign(post.data(), {"id": post.id}))
-
-                if (x >= props.length - 1) {
-
-                    break
-                }
-
-                x++
-            }
+                    return Object.assign(post.data(), {"id": post.id})
+                })
+                .filter((post) => post)
 
             setPosts(posts = postsData)
-        })
+        }
+
+        runAsync()
     }, [user])
 
     return (
@@ -60,10 +59,11 @@ const Posts: any = (props: Props) => {
                 </h2>
                 <div className="mt-6 grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
                      {posts ?
-                     posts.map((post:any) => {
+                     posts.map((post:any, index:number) => {
 
                         return (
                             <Post
+                            key={index}
                             data={post}
                             crossOverlay={props?.crossOverlay ?? null}
                             crossOnClick={props?.crossOnClick ?? null}
